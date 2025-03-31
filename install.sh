@@ -55,9 +55,10 @@ install_homebrew() {
   if ! command -v brew &>/dev/null; then
     status_msg "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
+    mkdir -p ~/.config/fish
+    touch ~/.config/fish/config.fish
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.config/fish/config.fish
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   else
     success_msg "Homebrew already installed"
   fi
@@ -81,10 +82,12 @@ install_wezterm() {
 install_fish() {
   status_msg "Installing Fish shell..."
   run_command "brew install fish"
-
   status_msg "Configuring Fish..."
   mkdir -p ~/.config/fish
-  run_command "cp -rf Gentleman.Dots/GentlemanFish/fish ~/.config/"
+  touch ~/.config/fish/config.fish
+  echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.config/fish/config.fish
+  mkdir -p ~/.config/fish/conf.d
+  run_command "cp -rf Gentleman.Dots/GentlemanFish/fish/* ~/.config/fish/"
   run_command "cp -f Gentleman.Dots/starship.toml ~/.config/"
 }
 
