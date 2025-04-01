@@ -28,8 +28,6 @@ clone_configs() {
 
 # Install Nerd Fonts
 install_nerd_fonts() {
-  status_msg "Installing Nerd Fonts..."
-
   # Create fonts directory
   FONT_DIR="$HOME/.local/share/fonts"
   mkdir -p "$FONT_DIR"
@@ -69,8 +67,17 @@ setup_fish() {
 # Setup Zellij configuration
 setup_zellij() {
   status_msg "Configuring Zellij..."
-  mkdir -p ~/.config/zellij
-  cp -rf "$CONFIG_DIR/zellij/"* ~/.config/zellij/
+  mkdir -p ~/.config/zellij/{layouts,plugins}
+  # Copy layout and config
+  cp "$CONFIG_DIR/zellij/zellij/layouts/work_OldWorld.kdl" ~/.config/zellij/layouts/
+  cp "$CONFIG_DIR/zellij/config.kdl" ~/.config/zellij/
+  # Install zjstatus plugin
+  if [ ! -f ~/.config/zellij/plugins/zjstatus.wasm ]; then
+    curl -LO https://github.com/dj95/zjstatus/releases/download/v0.3.0/zjstatus.wasm
+    mv zjstatus.wasm ~/.config/zellij/plugins/
+  fi
+  # Set default layout
+  sed -i 's|default_layout.*|default_layout "work_OldWorld"|' ~/.config/zellij/config.kdl
 }
 
 # Setup WezTerm configuration
@@ -88,19 +95,25 @@ setup_wezterm() {
 setup_neovim() {
   status_msg "Configuring Neovim..."
   mkdir -p ~/.config/nvim
+  # Clone LazyVim starter if missing
+  if [ ! -d "$CONFIG_DIR/nvim" ]; then
+    git clone --filter=blob:none --branch=stable https://github.com/LazyVim/starter "$CONFIG_DIR/nvim"
+  fi
+  # Merge configurations
   cp -rf "$CONFIG_DIR/nvim/"* ~/.config/nvim/
+  cp -rf "$CONFIG_DIR/nvim/lua/"* ~/.config/nvim/lua/
+  # Install LazyVim dependencies
+  nvim --headless "+Lazy! sync" +qa
 }
 
 # Main installation function
 main() {
   # Clone config files first
   clone_configs
-
   # Install packages
   status_msg "Installing core dependencies..."
   sudo apt-get update
   sudo apt-get install -y build-essential curl git
-
   # Install Homebrew
   if ! command -v brew >/dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -108,38 +121,31 @@ main() {
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
   fi
 
-  # Installing Nerd Fonts
-  status_msg "Installing Nerd Fonts..."
-  install_nerd_fonts
-
-  # Install Fish
-  status_msg "Installing Fish shell..."
-  brew install fish
-  setup_fish
-
-  # Install Starship
-  status_msg "Installing Starship..."
-  brew install starship
-
-  # Install tmux
-  status_msg "Installing tmux..."
-  brew install tmux
-
-  # Install Zellij
-  status_msg "Installing Zellij..."
-  brew install zellij
-  setup_zellij
-
   # Install WezTerm
   status_msg "Installing WezTerm..."
   brew install wezterm
   setup_wezterm
-
+  # Installing Nerd Fonts
+  status_msg "Installing Nerd Fonts..."
+  install_nerd_fonts
+  # Install Fish
+  status_msg "Installing Fish shell..."
+  brew install fish
+  setup_fish
+  # Install Starship
+  status_msg "Installing Starship..."
+  brew install starship
+  # Install tmux
+  status_msg "Installing tmux..."
+  brew install tmux
+  # Install Zellij
+  status_msg "Installing Zellij..."
+  brew install zellij
+  setup_zellij
   # Install Neovim
   status_msg "Installing Neovim..."
   brew install neovim
   setup_neovim
-
   # Set Fish as default shell
   status_msg "Setting Fish as default shell..."
   if ! grep -q "$(which fish)" /etc/shells; then

@@ -8,8 +8,8 @@ if status is-interactive
         set -x COLORTERM truecolor
 
         # Auto-start tmux in WezTerm
-        if not set -q TMUX
-            tmux new-session -A -s main
+        if not set -q ZELLIJ
+            zellij -l work_OldWorld
         end
 
         # Configure WezTerm tabs
