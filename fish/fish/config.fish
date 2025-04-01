@@ -1,28 +1,27 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
-end
+    # Detect WezTerm and auto-start tmux
+    if test "$TERM_PROGRAM" = WezTerm
+        if not set -q TMUX
+            tmux new-session -A -s main
+        end
+    end
 
-if test (uname) = Darwin
-    # macOS
-    set BREW_BIN /opt/homebrew/bin/brew
-else
-    # Linux
+    starship init fish | source
     set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
 end
-
+# Linux
 set -x PATH $HOME/.volta/bin $HOME/.bun/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $PATH /usr/local/bin $HOME/.config $HOME/.cargo/bin /usr/local/lib/*
 
 eval ($BREW_BIN shellenv)
 
-if not set -q TMUX
-    tmux
-end
-
-#if not set -q ZELLIJ 
-#  zellij
+#if not set -q TMUX
+#    tmux
 #end
 
-starship init fish | source
+#if not set -q ZELLIJ
+#    zellij
+#end
+
 zoxide init fish | source
 atuin init fish | source
 
@@ -46,13 +45,7 @@ carapace _carapace | source
 set -x LS_COLORS "di=38;5;67:ow=48;5;60:ex=38;5;132:ln=38;5;144:*.tar=38;5;180:*.zip=38;5;180:*.jpg=38;5;175:*.png=38;5;175:*.mp3=38;5;175:*.wav=38;5;175:*.txt=38;5;223:*.sh=38;5;132"
 set -g fish_greeting ""
 
-## alias
-if test (uname) = Darwin
-    alias ls='ls --color=auto'
-else
-    alias ls='gls --color=auto'
-end
-
+alias ls='gls --color=auto'
 alias fzfbat='fzf --preview="bat --theme=gruvbox-dark --color=always {}"'
 alias fzfnvim='nvim (fzf --preview="bat --theme=gruvbox-dark --color=always {}")'
 

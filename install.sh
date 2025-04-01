@@ -61,6 +61,9 @@ setup_fish() {
   status_msg "Configuring Fish shell..."
   mkdir -p ~/.config/fish
   cp -rf "$CONFIG_DIR/fish/"* ~/.config/fish/
+  # Link Starship config from repository
+  status_msg "Linking Starship configuration..."
+  cp "$CONFIG_DIR/starship.toml" ~/.config/starship.toml
 }
 
 # Setup Zellij configuration
@@ -109,6 +112,10 @@ main() {
   status_msg "Installing Fish shell..."
   brew install fish
   setup_fish
+
+  # Install Starship
+  status_msg "Installing Starship..."
+  brew install starship
 
   # Install Zellij
   status_msg "Installing Zellij..."
