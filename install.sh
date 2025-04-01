@@ -75,7 +75,7 @@ setup_neovim() {
   local NVIM_TEMP_DIR="$CONFIG_DIR/nvim-temp"
   # Clone LazyVim starter as base
   if [ ! -d "$NVIM_TEMP_DIR" ]; then
-    git clone --filter=blob:none --branch=stable https://github.com/LazyVim/starter "$NVIM_TEMP_DIR"
+    git clone --filter=blob:none https://github.com/LazyVim/starter "$NVIM_TEMP_DIR"
   fi
   cp -rf "$NVIM_TEMP_DIR/"* ~/.config/nvim/
   cp -rf "$CONFIG_DIR/nvim-config/"* ~/.config/nvim/
