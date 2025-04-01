@@ -2,6 +2,17 @@ if status is-interactive
     # Set WezTerm as default terminal
     set -x TERMINAL wezterm
 
+    if command -q zoxide
+        zoxide init fish | source
+    end
+
+    if command -q atuin
+        atuin init fish | source
+    end
+    if command -q carapace
+        set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
+        carapace _carapace | source
+    end
     # Configure WezTerm-specific settings
     if set -q WEZTERM
         # Set color scheme
@@ -19,27 +30,20 @@ if status is-interactive
         funcsave wezterm_tab_title
     end
 
-    starship init fish | source
+    if command -q starship
+        starship init fish | source
+    else
+        echo "Warning: Starship not installed - run ./install.sh"
+    end
     set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
     eval ($BREW_BIN shellenv)
 end
 
 # Linux
 set -x PATH $HOME/.volta/bin $HOME/.bun/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $PATH /usr/local/bin $HOME/.config $HOME/.cargo/bin /usr/local/lib/*
-
-#if not set -q TMUX
-#    tmux
-#end
-
-#if not set -q ZELLIJ
-#    zellij
-#end
-
-zoxide init fish | source
-atuin init fish | source
-
 set -x PATH $HOME/.cargo/bin $PATH
 set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
+set -gx PATH /home/linuxbrew/.linuxbrew/bin $PATH
 
 if not test -d ~/.config/fish/completions
     mkdir -p ~/.config/fish/completions
@@ -52,8 +56,6 @@ if not test -f ~/.config/fish/completions/.initialized
     carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish
     touch ~/.config/fish/completions/.initialized
 end
-
-carapace _carapace | source
 
 set -x LS_COLORS "di=38;5;67:ow=48;5;60:ex=38;5;132:ln=38;5;144:*.tar=38;5;180:*.zip=38;5;180:*.jpg=38;5;175:*.png=38;5;175:*.mp3=38;5;175:*.wav=38;5;175:*.txt=38;5;223:*.sh=38;5;132"
 set -g fish_greeting ""
