@@ -96,7 +96,8 @@ setup_wezterm() {
 
 main() {
   clone_configs
-  # Core dependencies
+  status_msg "Installing Fish utilities..."
+  brew install zoxide atuin carapace
   status_msg "Installing core dependencies..."
   sudo apt-get update
   sudo apt-get install -y build-essential curl git
