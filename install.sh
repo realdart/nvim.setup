@@ -97,7 +97,7 @@ setup_wezterm() {
 main() {
   clone_configs
   status_msg "Installing Fish utilities..."
-  brew install zoxide atuin carapace
+  brew install zoxide atuin carapace starship
   status_msg "Installing core dependencies..."
   sudo apt-get update
   sudo apt-get install -y build-essential curl git
