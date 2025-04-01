@@ -26,6 +26,36 @@ clone_configs() {
   git clone --depth 1 "$CONFIG_REPO" "$CONFIG_DIR" || error_msg "Failed to clone config repository"
 }
 
+# Install Nerd Fonts
+install_nerd_fonts() {
+  status_msg "Installing Nerd Fonts..."
+
+  # Create fonts directory
+  FONT_DIR="$HOME/.local/share/fonts"
+  mkdir -p "$FONT_DIR"
+
+  # Download and install major Nerd Fonts
+  declare -A fonts=(
+    ["FiraCode"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/FiraCode.tar.xz"
+    ["Iosevka"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Iosevka.tar.xz"
+    ["JetBrainsMono"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.tar.xz"
+    ["Meslo"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Meslo.tar.xz"
+    ["Hack"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.tar.xz"
+    ["0xProto"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/0xProto.tar.xz"
+  )
+
+  for font in "${!fonts[@]}"; do
+    status_msg "Installing $font Nerd Font..."
+    curl -L "${fonts[$font]}" -o "/tmp/$font.tar.xz"
+    tar -xf "/tmp/$font.tar.xz" -C "$FONT_DIR"
+    rm -f "/tmp/$font.tar.xz"
+  done
+
+  # Update font cache
+  fc-cache -fv
+  success_msg "Nerd Fonts installed"
+}
+
 # Setup Fish configuration
 setup_fish() {
   status_msg "Configuring Fish shell..."
