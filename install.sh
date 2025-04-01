@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Configuration Repository
 CONFIG_REPO="https://github.com/realdart/nvim.setup.git"
 CONFIG_DIR="$HOME/.config-setup-tmp"
 
@@ -34,11 +33,7 @@ install_nerd_fonts() {
 
   # Download and install major Nerd Fonts
   declare -A fonts=(
-    ["FiraCode"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/FiraCode.tar.xz"
-    ["Iosevka"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Iosevka.tar.xz"
-    ["JetBrainsMono"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.tar.xz"
-    ["Meslo"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Meslo.tar.xz"
-    ["Hack"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.tar.xz"
+    # Can add more fonts if you like
     ["0xProto"]="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/0xProto.tar.xz"
   )
 
@@ -48,69 +43,60 @@ install_nerd_fonts() {
     tar -xf "/tmp/$font.tar.xz" -C "$FONT_DIR"
     rm -f "/tmp/$font.tar.xz"
   done
-
   # Update font cache
   fc-cache -fv
   success_msg "Nerd Fonts installed"
 }
 
-# Setup Fish configuration
 setup_fish() {
   status_msg "Configuring Fish shell..."
   mkdir -p ~/.config/fish
-  cp -rf "$CONFIG_DIR/fish/"* ~/.config/fish/
-  # Link Starship config from repository
-  status_msg "Linking Starship configuration..."
-  cp "$CONFIG_DIR/starship.toml" ~/.config/starship.toml
+  cp -rf "$CONFIG_DIR/fish-config/"* ~/.config/fish/
+  cp "$CONFIG_DIR/starship.toml" ~/.config/
 }
 
-# Setup Zellij configuration
 setup_zellij() {
   status_msg "Configuring Zellij..."
   mkdir -p ~/.config/zellij/{layouts,plugins}
-  # Copy layout and config
-  cp "$CONFIG_DIR/zellij/zellij/layouts/work_OldWorld.kdl" ~/.config/zellij/layouts/
-  cp "$CONFIG_DIR/zellij/config.kdl" ~/.config/zellij/
-  # Install zjstatus plugin
+  cp "$CONFIG_DIR/zellij-config/layouts/work_OldWorld.kdl" ~/.config/zellij/layouts/
+  cp "$CONFIG_DIR/zellij-config/config.kdl" ~/.config/zellij/
   if [ ! -f ~/.config/zellij/plugins/zjstatus.wasm ]; then
+    status_msg "Installing zjstatus plugin..."
     curl -LO https://github.com/dj95/zjstatus/releases/download/v0.3.0/zjstatus.wasm
     mv zjstatus.wasm ~/.config/zellij/plugins/
   fi
-  # Set default layout
   sed -i 's|default_layout.*|default_layout "work_OldWorld"|' ~/.config/zellij/config.kdl
 }
 
-# Setup WezTerm configuration
+setup_neovim() {
+  status_msg "Configuring Neovim..."
+  mkdir -p ~/.config/nvim
+  # Create temporary setup directory
+  local NVIM_TEMP_DIR="$CONFIG_DIR/nvim-temp"
+  # Clone LazyVim starter as base
+  if [ ! -d "$NVIM_TEMP_DIR" ]; then
+    git clone --filter=blob:none --branch=stable https://github.com/LazyVim/starter "$NVIM_TEMP_DIR"
+  fi
+  cp -rf "$NVIM_TEMP_DIR/"* ~/.config/nvim/
+  cp -rf "$CONFIG_DIR/nvim-config/"* ~/.config/nvim/
+  # Install LazyVim dependencies
+  status_msg "Installing Neovim plugins..."
+  nvim --headless "+Lazy! sync" +qa
+}
+
 setup_wezterm() {
   status_msg "Configuring WezTerm..."
   mkdir -p ~/.config/wezterm
-  cp "$CONFIG_DIR/wezterm/wezterm.lua" ~/.config/wezterm/
+  cp "$CONFIG_DIR/wezterm.lua" ~/.config/wezterm/
   # Set WezTerm as default terminal
   if ! grep -q "alias terminal=wezterm" ~/.config/fish/config.fish; then
     echo -e "\nalias terminal=wezterm" >>~/.config/fish/config.fish
   fi
 }
 
-# Setup Neovim configuration
-setup_neovim() {
-  status_msg "Configuring Neovim..."
-  mkdir -p ~/.config/nvim
-  # Clone LazyVim starter if missing
-  if [ ! -d "$CONFIG_DIR/nvim" ]; then
-    git clone --filter=blob:none --branch=stable https://github.com/LazyVim/starter "$CONFIG_DIR/nvim"
-  fi
-  # Merge configurations
-  cp -rf "$CONFIG_DIR/nvim/"* ~/.config/nvim/
-  cp -rf "$CONFIG_DIR/nvim/lua/"* ~/.config/nvim/lua/
-  # Install LazyVim dependencies
-  nvim --headless "+Lazy! sync" +qa
-}
-
-# Main installation function
 main() {
-  # Clone config files first
   clone_configs
-  # Install packages
+  # Core dependencies
   status_msg "Installing core dependencies..."
   sudo apt-get update
   sudo apt-get install -y build-essential curl git
@@ -120,44 +106,24 @@ main() {
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
   fi
-
-  # Install WezTerm
-  status_msg "Installing WezTerm..."
-  brew install wezterm
+  # Install packages
+  status_msg "Installing applications..."
+  brew install fish zellij wezterm neovim starship tmux
+  # Setup configurations
   setup_wezterm
-  # Installing Nerd Fonts
-  status_msg "Installing Nerd Fonts..."
-  install_nerd_fonts
-  # Install Fish
-  status_msg "Installing Fish shell..."
-  brew install fish
   setup_fish
-  # Install Starship
-  status_msg "Installing Starship..."
-  brew install starship
-  # Install tmux
-  status_msg "Installing tmux..."
-  brew install tmux
-  # Install Zellij
-  status_msg "Installing Zellij..."
-  brew install zellij
   setup_zellij
-  # Install Neovim
-  status_msg "Installing Neovim..."
-  brew install neovim
   setup_neovim
   # Set Fish as default shell
   status_msg "Setting Fish as default shell..."
-  if ! grep -q "$(which fish)" /etc/shells; then
-    command -v fish | sudo tee -a /etc/shells
+  fish_path=$(which fish)
+  if ! grep -q "$fish_path" /etc/shells; then
+    echo "$fish_path" | sudo tee -a /etc/shells
   fi
-  sudo chsh -s "$(which fish)" $USER
-
+  sudo chsh -s "$fish_path" $USER
   # Cleanup
   rm -rf "$CONFIG_DIR"
-
   success_msg "Installation complete! Log out and back in to start using your new environment."
 }
 
-# Execute main function
 main
