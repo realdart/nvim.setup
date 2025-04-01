@@ -101,6 +101,10 @@ main() {
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
   fi
 
+  # Installing Nerd Fonts
+  status_msg "Installing Nerd Fonts..."
+  install_nerd_fonts
+
   # Install Fish
   status_msg "Installing Fish shell..."
   brew install fish
