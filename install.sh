@@ -117,6 +117,10 @@ main() {
   status_msg "Installing Starship..."
   brew install starship
 
+  # Install tmux
+  status_msg "Installing tmux..."
+  brew install tmux
+
   # Install Zellij
   status_msg "Installing Zellij..."
   brew install zellij

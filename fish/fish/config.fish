@@ -1,18 +1,19 @@
 if status is-interactive
+    # Set Brew path and add to PATH first
+    set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
+    eval ($BREW_BIN shellenv)
     # Detect WezTerm and auto-start tmux
-    if test "$TERM_PROGRAM" = WezTerm
+    if set -q WEZTERM
         if not set -q TMUX
             tmux new-session -A -s main
         end
     end
 
     starship init fish | source
-    set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
 end
+
 # Linux
 set -x PATH $HOME/.volta/bin $HOME/.bun/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $PATH /usr/local/bin $HOME/.config $HOME/.cargo/bin /usr/local/lib/*
-
-eval ($BREW_BIN shellenv)
 
 #if not set -q TMUX
 #    tmux
