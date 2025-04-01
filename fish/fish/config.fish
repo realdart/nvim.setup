@@ -1,15 +1,27 @@
 if status is-interactive
-    # Set Brew path and add to PATH first
-    set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
-    eval ($BREW_BIN shellenv)
-    # Detect WezTerm and auto-start tmux
+    # Set WezTerm as default terminal
+    set -x TERMINAL wezterm
+
+    # Configure WezTerm-specific settings
     if set -q WEZTERM
+        # Set color scheme
+        set -x COLORTERM truecolor
+
+        # Auto-start tmux in WezTerm
         if not set -q TMUX
             tmux new-session -A -s main
         end
+
+        # Configure WezTerm tabs
+        function wezterm_tab_title
+            echo -ne "\033]0;"(basename (pwd))"\007"
+        end
+        funcsave wezterm_tab_title
     end
 
     starship init fish | source
+    set BREW_BIN /home/linuxbrew/.linuxbrew/bin/brew
+    eval ($BREW_BIN shellenv)
 end
 
 # Linux

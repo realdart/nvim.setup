@@ -78,6 +78,10 @@ setup_wezterm() {
   status_msg "Configuring WezTerm..."
   mkdir -p ~/.config/wezterm
   cp "$CONFIG_DIR/wezterm/wezterm.lua" ~/.config/wezterm/
+  # Set WezTerm as default terminal
+  if ! grep -q "alias terminal=wezterm" ~/.config/fish/config.fish; then
+    echo -e "\nalias terminal=wezterm" >>~/.config/fish/config.fish
+  fi
 }
 
 # Setup Neovim configuration
