@@ -5,6 +5,8 @@
 keybinds clear-defaults=true {
     locked {
         bind "Ctrl g" { SwitchToMode "normal"; }
+        bind "y" { SendKey "y"; SwitchToMode "locked"; } // Accept permissions
+        bind "n" { SendKey "n"; SwitchToMode "locked"; } // Deny permissions
     }
     pane {
         bind "left" { MoveFocus "left"; }
