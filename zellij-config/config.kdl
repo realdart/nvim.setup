@@ -265,7 +265,7 @@ keybinds clear-defaults=true {
 // changing these requires a restart to take effect
 plugins {
     compact-bar location="zellij:compact-bar" {
-        permission_flags ["ReadApplicationState", "ChangeApplicationState", "RunCommands"]
+        permission_flags=["ReadApplicationState", "ChangeApplicationState", "RunCommands"]
     }
     configuration location="zellij:configuration"
     filepicker location="zellij:strider" {
