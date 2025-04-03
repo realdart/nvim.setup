@@ -24,7 +24,7 @@ add_newline = true
 command_timeout = 3600000
 
 # color and style settings
-palette = "oldWorld"
+palette = "OldWorld"
 
 [fill]
 symbol = ' '
@@ -38,7 +38,7 @@ symbol = ' '
 # text_color = "#c5a3a9" # na: text
 # text_light = "#1c1a1c" # bl: background
 
-[palettes.oldWorld]
+[palettes.OldWorld]
 arrow = "#EA83A5"      # ia: intense pink
 os = "#85B5BA"         # va: light blue-green
 directory = "#92A2D5"  # ca: blue lavender
@@ -47,7 +47,6 @@ duration = "#92A2D5"   # ca: blue lavender
 text_color = "#C9C7CD" # na: light gray
 text_light = "#000000" # bl: dark gray
 
-# Pink mustache icon for the prompt
 [character]
 success_symbol = "[->](fg:#85B5BA)"
 error_symbol = "[->](fg:red)"
@@ -138,8 +137,3 @@ format = '[[ $symbol ($version) ](fg:#7FB4CA)]($style)'
 [php]
 symbol = ""
 format = '[[ $symbol ($version) ](fg:#FF9E3B)]($style)'
-
-[time]
-disabled = true
-time_format = "%R"
-format = '[[   $time ](fg:#8BA4B0)]($style)'

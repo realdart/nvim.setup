@@ -1,6 +1,6 @@
 # nvim.setup
 
-lazyvim config
+lazyvim config (linux only)
 
 to use the script, run the following:
 
