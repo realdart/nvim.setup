@@ -108,6 +108,8 @@ wezterm_default() {
   status_msg "Setting WezTerm as default terminal..."
   sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator (which wezterm) 100
   sudo update-alternatives --set x-terminal-emulator (which wezterm)
+  # Install graphics dependencies
+  sudo apt-get install -y libegl-mesa0 libgl1-mesa-dri libvulkan1
 }
 
 main() {
