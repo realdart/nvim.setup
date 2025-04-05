@@ -108,7 +108,8 @@ main() {
   brew install zoxide atuin carapace starship
   brew tap wez/wezterm-linuxbrew
   brew install fish zellij wezterm neovim starship tmux
-  # Setup configurations
+  # Setup configuration
+  install_nerd_fonts
   setup_wezterm
   setup_fish
   setup_zellij
