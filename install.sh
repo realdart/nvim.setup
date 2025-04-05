@@ -107,6 +107,7 @@ main() {
   # Install packages
   status_msg "Installing applications..."
   brew install zoxide atuin carapace starship
+  brew tap wez/wezterm-linuxbrew
   brew install fish zellij wezterm neovim starship tmux
   # Setup configurations
   setup_wezterm

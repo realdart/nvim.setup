@@ -6,3 +6,7 @@ to use the script, run the following:
 
 `chmod +x install.sh
 && ./install.sh`
+
+if the script fails, remember to _update packages_ first:
+
+`sudo apt-get update`
