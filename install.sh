@@ -54,6 +54,8 @@ setup_fish() {
   touch ~/.config/fish/config.fish
   cp -rf "$CONFIG_DIR/fish-config/"* ~/.config/fish/
   cp "$CONFIG_DIR/starship.toml" ~/.config/
+  echo 'set -gx PATH /home/linuxbrew/.linuxbrew/bin $PATH' >>~/.config/fish/config.fish
+  echo 'eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >>~/.config/fish/config.fish
 }
 
 setup_zellij() {
@@ -89,10 +91,6 @@ setup_wezterm() {
   status_msg "Configuring WezTerm..."
   mkdir -p ~/.config/wezterm
   cp "$CONFIG_DIR/wezterm.lua" ~/.config/wezterm/
-  # Set WezTerm as default terminal
-  if ! grep -q "alias terminal=wezterm" ~/.config/fish/config.fish; then
-    echo -e "\nalias terminal=wezterm" >>~/.config/fish/config.fish
-  fi
 }
 
 main() {
