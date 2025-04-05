@@ -257,8 +257,6 @@ keybinds clear-defaults=true {
     }
 }
 
-// Plugin aliases - can be used to change the implementation of Zellij
-// changing these requires a restart to take effect
 plugins {
     compact-bar location="zellij:compact-bar"
     configuration location="zellij:configuration"
@@ -275,22 +273,8 @@ plugins {
     }
 }
 
-// Plugins to load in the background when a new session starts
-// eg. "file:/path/to/my-plugin.wasm"
-// eg. "https://example.com/my-plugin.wasm"
 load_plugins {
 }
- 
-// Use a simplified UI without special fonts (arrow glyphs)
-// Options:
-//   - true
-//   - false (Default)
-// 
-// simplified_ui true
- 
-// Choose the theme that is specified in the themes section.
-// Default: default
-// 
 
 themes {
     kanagawa_dragon {
@@ -364,7 +348,7 @@ themes {
     }
 }
 
-theme "oldWorld"
+theme "OldWorld"
 default_mode "locked"
 default_layout "work_OldWorld"
 scrollback_editor "nvim"
