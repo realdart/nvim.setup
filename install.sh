@@ -93,6 +93,23 @@ setup_wezterm() {
   cp "$CONFIG_DIR/wezterm.lua" ~/.config/wezterm/
 }
 
+fish_default() {
+  # Set Fish as default shell
+  status_msg "Setting Fish as default shell..."
+  fish_path=$(which fish)
+  if ! grep -q "$fish_path" /etc/shells; then
+    echo "$fish_path" | sudo tee -a /etc/shells
+  fi
+  sudo chsh -s "$fish_path" $USER
+}
+
+wezterm_default() {
+  # Set as default terminal
+  status_msg "Setting WezTerm as default terminal..."
+  sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator (which wezterm) 100
+  sudo update-alternatives --set x-terminal-emulator (which wezterm)
+}
+
 main() {
   clone_configs
   sudo apt-get update
@@ -114,13 +131,8 @@ main() {
   setup_fish
   setup_zellij
   setup_neovim
-  # Set Fish as default shell
-  status_msg "Setting Fish as default shell..."
-  fish_path=$(which fish)
-  if ! grep -q "$fish_path" /etc/shells; then
-    echo "$fish_path" | sudo tee -a /etc/shells
-  fi
-  sudo chsh -s "$fish_path" $USER
+  fish_default
+  wezterm_default
   # Cleanup
   rm -rf "$CONFIG_DIR"
   success_msg "Installation complete! Log out and back in to start using your new environment."
