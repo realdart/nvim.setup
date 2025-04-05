@@ -51,6 +51,7 @@ install_nerd_fonts() {
 setup_fish() {
   status_msg "Configuring Fish shell..."
   mkdir -p ~/.config/fish
+  touch ~/.config/fish/config.fish
   cp -rf "$CONFIG_DIR/fish-config/"* ~/.config/fish/
   cp "$CONFIG_DIR/starship.toml" ~/.config/
 }
