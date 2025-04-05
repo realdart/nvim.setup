@@ -96,9 +96,6 @@ setup_wezterm() {
 
 main() {
   clone_configs
-  status_msg "Installing Fish utilities..."
-  brew install zoxide atuin carapace starship
-  status_msg "Installing core dependencies..."
   sudo apt-get update
   sudo apt-get install -y build-essential curl git
   # Install Homebrew
@@ -109,6 +106,7 @@ main() {
   fi
   # Install packages
   status_msg "Installing applications..."
+  brew install zoxide atuin carapace starship
   brew install fish zellij wezterm neovim starship tmux
   # Setup configurations
   setup_wezterm

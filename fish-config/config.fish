@@ -18,7 +18,6 @@ if status is-interactive
         # Set color scheme
         set -x COLORTERM truecolor
 
-        # Auto-start tmux in WezTerm
         if not set -q ZELLIJ
             zellij -l work_OldWorld
         end
@@ -42,8 +41,6 @@ end
 # Linux
 set -x PATH $HOME/.volta/bin $HOME/.bun/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $PATH /usr/local/bin $HOME/.config $HOME/.cargo/bin /usr/local/lib/*
 set -x PATH $HOME/.cargo/bin $PATH
-set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-set -gx PATH /home/linuxbrew/.linuxbrew/bin $PATH
 
 if not test -d ~/.config/fish/completions
     mkdir -p ~/.config/fish/completions
