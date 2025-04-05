@@ -1,4 +1,4 @@
-# nvim.setup
+# nvim.setup inspired in [Gentleman.Dots](https://github.com/Gentleman-Programming/Gentleman.Dots)
 
 lazyvim config (linux only)
 
