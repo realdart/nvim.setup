@@ -90,7 +90,18 @@ setup_neovim() {
 setup_wezterm() {
   status_msg "Configuring WezTerm..."
   mkdir -p ~/.config/wezterm
+  install_nerd_fonts
   cp "$CONFIG_DIR/wezterm.lua" ~/.config/wezterm/
+  # Check font installation
+  if ! fc-list | grep -q "0xProto Nerd Font"; then
+    error_msg "0xProto Nerd Font not found! Check font installation."
+  fi
+  # Set as default terminal
+  status_msg "Setting WezTerm as default terminal..."
+  sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator $(which wezterm) 100
+  sudo update-alternatives --set x-terminal-emulator $(which wezterm)
+  # Install graphics dependencies
+  sudo apt-get install -y libegl-mesa0 libgl1-mesa-dri libvulkan1
 }
 
 fish_default() {
@@ -103,15 +114,6 @@ fish_default() {
   sudo chsh -s "$fish_path" $USER
 }
 
-wezterm_default() {
-  # Set as default terminal
-  status_msg "Setting WezTerm as default terminal..."
-  sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator (which wezterm) 100
-  sudo update-alternatives --set x-terminal-emulator (which wezterm)
-  # Install graphics dependencies
-  sudo apt-get install -y libegl-mesa0 libgl1-mesa-dri libvulkan1
-}
-
 main() {
   clone_configs
   sudo apt-get update
@@ -121,6 +123,7 @@ main() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
+    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.config/fish/config.fish
   fi
   # Install packages
   status_msg "Installing applications..."
@@ -128,13 +131,11 @@ main() {
   brew tap wez/wezterm-linuxbrew
   brew install fish zellij wezterm neovim starship tmux
   # Setup configuration
-  install_nerd_fonts
   setup_wezterm
   setup_fish
   setup_zellij
   setup_neovim
   fish_default
-  wezterm_default
   # Cleanup
   rm -rf "$CONFIG_DIR"
   success_msg "Installation complete! Log out and back in to start using your new environment."
