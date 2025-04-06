@@ -333,7 +333,7 @@ themes {
       white "#c5a3a9"     // na: light text
     }
 
-    oldWorld {
+    OldWorld {
       fg "#C9C7CD"        // na: main text (light gray)
       bg "#000000"        // bl: dark background (almost black)
       red "#EA83A5"       // ia: intense pink

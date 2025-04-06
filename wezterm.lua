@@ -50,4 +50,12 @@ config.font = wezterm.font("0xProto Nerd Font")
 config.font_size = 11.5
 config.hide_tab_bar_if_only_one_tab = true
 
+default_prog =
+	{ "fish" }, -- Default to Fish
+	quick_select_patterns == {
+		-- Allow Zellij to handle pane/tab creation
+		"zellij action new-tab",
+		"zellij action new-pane",
+	}
+
 return config

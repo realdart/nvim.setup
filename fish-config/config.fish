@@ -1,6 +1,9 @@
 if status is-interactive
     # Set WezTerm as default terminal
     set -x TERMINAL wezterm
+    if not set -q WEZTERM_PANE && not set -q ZELLIJ
+        zellij attach -c main || zellij -l work_OldWorld
+    end
 
     if command -q zoxide
         zoxide init fish | source
