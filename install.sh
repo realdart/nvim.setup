@@ -92,10 +92,6 @@ setup_wezterm() {
   mkdir -p ~/.config/wezterm
   install_nerd_fonts
   cp "$CONFIG_DIR/wezterm.lua" ~/.config/wezterm/
-  # Check font installation
-  if ! fc-list | grep -q "0xProto Nerd Font"; then
-    error_msg "0xProto Nerd Font not found! Check font installation."
-  fi
   # Set as default terminal
   status_msg "Setting WezTerm as default terminal..."
   sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator $(which wezterm) 100
