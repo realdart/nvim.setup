@@ -46,8 +46,8 @@ keybinds clear-defaults=true {
         bind "l" { GoToNextTab; }
         bind "n" { NewTab; SwitchToMode "locked"; }
         bind "r" { SwitchToMode "renametab"; TabNameInput 0; }
+        bind "s" { ToggleActiveSyncTab; SwitchToMode "locked"; }
         bind "t" { SwitchToMode "normal"; }
-        bind "s" { ToggleTab; SwitchToMode "locked"; }
         bind "x" { CloseTab; SwitchToMode "locked"; }
         bind "tab" { ToggleTab; }
     }
@@ -148,7 +148,7 @@ keybinds clear-defaults=true {
             "close tab"             "ctrl + g + t + x"
             "change focus of tab"   "ctrl + g + t + arrow key"
             "rename tab"            "ctrl + g + t + r"
-            " tab"              "ctrl + g + t + s"
+            "sync tab"              "ctrl + g + t + s"
             "brake pane to new tab" "ctrl + g + t + b"
             "brake pane left"       "ctrl + g + t + ["
             "brake pane right"      "ctrl + g + t + ]"
@@ -273,6 +273,8 @@ plugins {
     }
 }
 
+// eg. "file:/path/to/my-plugin.wasm"
+// eg. "https://example.com/my-plugin.wasm"
 load_plugins {
 }
 
